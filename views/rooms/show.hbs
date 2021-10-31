@@ -3,5 +3,14 @@
 </div>
 
 <div>
-    Coming soon: posts!
+    {{#each posts as |post|}}
+        <div>
+            <h3>{{post.subject}}</h3>
+            <p>{{post.body}}</p>
+        </div>
+    {{/each}}
+</div>
+
+<div>
+    <a href="/rooms/{{room.id}}/posts/new">New Post</a>
 </div>

@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('./helpers/auth');
 const Room = require('../models/room');
 const Post = require('../models/post');
-const posts = require('./posts');
+const postsRouter = require('./posts');
 
 // Rooms index
 router.get('/', (req, res, next) => {
@@ -26,14 +26,16 @@ router.get('/:id', auth.requireLogin, (req, res, next) => {
     Room.findById(req.params.id, (err, room) => {
         if(err) {
             console.error(err);
-
-            Post.find({ room: room }, (err, posts) => {
-                if(err) {
-                    console.error(err);
-                }
-            })
         }
-        res.render('rooms/show', { room: room, posts: posts });
+        
+        // Show all comments that come with the posts by telling Mongoose to populate the query
+        Post.find({ room: room }).sort({ points: -1 }).populate('comments').exec((err, posts) => {
+            if(err) {
+                console.error(err);
+            }
+            
+            res.render('rooms/show', { room: room, posts: posts, roomId: req.params.id });
+        });
     });
 });
 
@@ -71,6 +73,6 @@ router.post('/', auth.requireLogin, (req, res, next) => {
 });
 
 // Nest the routes to posts
-router.use('/:roomId/posts', posts);
+router.use('/:roomId/posts', postsRouter);
 
 module.exports = router;

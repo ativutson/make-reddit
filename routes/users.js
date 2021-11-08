@@ -23,8 +23,11 @@ router.get('/new', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const user = new User(req.body);
 
-  user.save(function(err, user) {
-    if(err) console.log(err);
+  user.save((err, user) => {
+    if(err) {
+      console.log(err);
+    }
+    
     return res.redirect('/users');
   });
 })

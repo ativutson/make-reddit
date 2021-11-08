@@ -24,7 +24,7 @@ UserSchema.statics.authenticate = function(username, password, next) {
       if (err) {
         return next(err)
       } else if (!user) {
-        var err = new Error('User not found.');
+        let err = new Error('User not found.');
         err.status = 401;
         return next(err);
       }
@@ -38,5 +38,4 @@ UserSchema.statics.authenticate = function(username, password, next) {
     });
 }
 
-const User = mongoose.model('User', UserSchema);
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);
